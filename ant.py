@@ -57,19 +57,18 @@ class Ant():
         self.pheromone_matrix = self.environment.get_pheromone_matrix()
 
         for possible_location in self.possible_locations:
-            current_to_j = self.pheromone_matrix[self.current_location][possible_location] ** self.alpha + self.environment.distance_matrix[self.current_location][possible_location] ** self.beta
-            sum_current_to_l = sum([self.pheromone_matrix[self.current_location][l] ** self.alpha + self.environment.distance_matrix[self.current_location][l] ** self.beta for l in self.possible_locations])
+            current_to_j = (self.pheromone_matrix[self.current_location][possible_location] ** self.alpha) * (self.environment.distance_matrix[self.current_location][possible_location] ** self.beta)
+            sum_current_to_l = sum([(self.pheromone_matrix[self.current_location][l] ** self.alpha) * (self.environment.distance_matrix[self.current_location][l] ** self.beta) for l in self.possible_locations])
             prob = current_to_j / sum_current_to_l
             prob_list.append(prob)
 
         max_prob_index = prob_list.index(max(prob_list))
         future_location = self.possible_locations[max_prob_index]
 
-              
         self.travelled_distance.append(self.get_distance(self.current_location, future_location))
         # print(self.current_location)
         # print(future_location)
-        assert self.get_distance(self.current_location, future_location) == self.environment.distance_matrix[self.current_location][future_location]
+        # assert self.get_distance(self.current_location, future_location) == self.environment.distance_matrix[self.current_location][future_location]
         self.current_location = future_location
         self.visited_locations.append(self.current_location)
 

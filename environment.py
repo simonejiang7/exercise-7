@@ -31,14 +31,16 @@ class Environment:
 
     # Intialize the pheromone trails in the environment
     def initialize_pheromone_map(self):
-
+        
         distance_matrix = np.array([
             [
-                tsplib95.distances.euclidean(self.node_coords[self.edge[i * self.node_count + j][0]], self.node_coords[self.edge[i * self.node_count + j][1]])
+                1 / tsplib95.distances.euclidean(self.node_coords[self.edge[i * self.node_count + j][0]], self.node_coords[self.edge[i * self.node_count + j][1]])
+                if tsplib95.distances.euclidean(self.node_coords[self.edge[i * self.node_count + j][0]], self.node_coords[self.edge[i * self.node_count + j][1]]) != 0 else 0
                 for j in range(self.node_count)
             ]
             for i in range(self.node_count)
         ])
+
 
         pheromone_matrix = np.array([
             [

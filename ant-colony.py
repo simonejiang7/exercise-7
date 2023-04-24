@@ -22,10 +22,12 @@ class AntColony:
 
         # Initialize the environment of the ant colony
         self.environment = Environment(self.rho, self.ant_population)
+        # Get the pheromone matrix of the environment
         self.pheromone_matrix = self.environment.initialize_pheromone_map()
 
         # Initilize the list of ants of the ant colony
         self.ants = []
+        # Initialize the sum of pheromone of zero values
         self.sum_pheromone = np.zeros((self.environment.get_num_locations(), self.environment.get_num_locations()))
 
     # Solve the ant colony optimization problem  
@@ -40,45 +42,43 @@ class AntColony:
 
             i = 0
 
-            # Initialize the ants of the ant colony
-
             for i in range(self.ant_population):
 
-                # print("ant population: ", self.ant_population)
-
-                # Initialize the random location
                 print("=> ant: ", i+1)
+
+                # Randomly select an initial location for the ant
                 initial_location = np.random.randint(0, self.environment.get_num_locations())
                 print("=> initial_location: ", initial_location)
                 
-                # Initialize an ant on a random initial location 
-                # if iter == 1:
-                    # Position the ant in the environment of the ant colony so that it can move around
+                # Initialize an ant
                 ant = Ant(self.alpha, self.beta, initial_location)
                 ant.join(self.environment)
-                # print("debug", self.environment.possible_locations)
-                # else:
-                #     ant = self.ants[i]
-                
+
+                # Make the ant move and traverse the environment
                 ant.run()
 
+                # Calculate the ant's travelled distance, sum of travelled distance and visited locations
                 ant_travel_distance, sum_distance = ant.get_travelled_distance()
                 ant_visited_locations = ant.get_visited_location()
 
                 print("=> ant travel distance: ", ant_travel_distance)
                 print("=> ant sum distance: ", sum_distance)
                 print("=> ant visited locations: ", ant_visited_locations)
-
                 print("=> ant final location: ", ant_visited_locations[-1])
 
+                # Update the shortest distance and the solution if the ant's travelled distance is less than the shortest distance
                 if sum_distance < shortest_distance:
                     shortest_distance = sum_distance
                     solution = ant_visited_locations
 
                 for i in range(len(ant_visited_locations)-1):
                     location = ant_visited_locations[i]
+                    # print("debug location: ", location)
                     next_location = ant_visited_locations[i+1]
+                    # print("debug next_location: ", next_location)
                     self.sum_pheromone[location][next_location] += 1 / ant_travel_distance[i+1]
+                    self.sum_pheromone[next_location][location] += 1 / ant_travel_distance[i+1]
+                    # print("debug ant_travel_distance[i+1]: ", ant_travel_distance[i+1])
 
                 # print("=> sum_pheromone: ", self.sum_pheromone[:10,])
 
@@ -98,7 +98,7 @@ class AntColony:
 
 def main():
     # Intialize the ant colony
-    ant_colony = AntColony(ant_population = 5, iterations = 10, alpha = 3, beta = 100, rho = 0.8)
+    ant_colony = AntColony(ant_population = 5, iterations = 10, alpha = 2, beta = 5, rho = 0.5)
 
     # Solve the ant colony optimization problem
     solution, distance = ant_colony.solve()
