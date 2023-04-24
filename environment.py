@@ -51,7 +51,6 @@ class Environment:
             ]
             for i in range(self.node_count)
         ])
-        print("2=>>>>>>>> \n", distance_matrix)
 
         pheromone_matrix = np.array([
             [
@@ -63,17 +62,14 @@ class Environment:
         ])
 
         np.fill_diagonal(pheromone_matrix, 0)
-        # print(distance_matrix)
-        # print(pheromone_matrix)
 
         self.distance_matrix = distance_matrix
-        # self.pheromone_matrix = pheromone_matrix
+        self.pheromone_matrix = pheromone_matrix
 
         return distance_matrix, pheromone_matrix
-        # return distance_matrix
 
     # Update the pheromone trails in the environment
-    def update_pheromone_map(self, sum_pheromone):
+    def update_pheromone_matrix(self, sum_pheromone):
 
         # negative feedback
         self.distance_matrix = self.distance_matrix * self.rho
@@ -82,11 +78,17 @@ class Environment:
         self.pheromone_matrix = self.pheromone_matrix + sum_pheromone
 
     # Get the pheromone trails in the environment
-    def get_pheromone_map(self):
+    def get_pheromone_matrix(self):
         return self.pheromone_matrix
     
     # Get the environment topology
     def get_possible_locations(self):
         return self.possible_locations
+    
+    def get_location_coords(self, location):
+        return self.node_coords[location]
+    
+    def get_num_locations(self):
+        return self.node_count
 
     

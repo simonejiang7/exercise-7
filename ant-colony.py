@@ -21,20 +21,28 @@ class AntColony:
 
         # Initialize the environment of the ant colony
         self.environment = Environment(self.rho, self.ant_population)
-        self.environment.initialize_pheromone_map()
+        distance_matrix, pheromone_matrix = self.environment.initialize_pheromone_map()
 
         # Initilize the list of ants of the ant colony
         self.ants = []
 
         # Initialize the ants of the ant colony
         for i in range(ant_population):
+
+            # Initialize the random location
+            initial_location = np.random.randint(0, self.environment.get_num_locations())
+
+            print("=> initial_location: ", initial_location)
             
             # Initialize an ant on a random initial location 
-            ant = Ant(self.alpha, self.beta, None)
+            ant = Ant(self.alpha, self.beta, initial_location)
 
             # Position the ant in the environment of the ant colony so that it can move around
             ant.join(self.environment)
-        
+            # ant.run()
+
+            ant_travel_distance, ant_travel_path = ant.run()
+
             # Add the ant to the ant colony
             self.ants.append(ant)
 
@@ -52,7 +60,7 @@ class AntColony:
 
 def main():
     # Intialize the ant colony
-    ant_colony = AntColony(1, None, None, None, None)
+    ant_colony = AntColony(ant_population = 1, iterations = 1, alpha = 1, beta = 2, rho = 0.2)
 
     # Solve the ant colony optimization problem
     solution, distance = ant_colony.solve()
