@@ -31,7 +31,7 @@ class Environment:
 
     # Intialize the pheromone trails in the environment
     def initialize_pheromone_map(self):
-        
+
         distance_matrix = np.array([
             [
                 1 / tsplib95.distances.euclidean(self.node_coords[self.edge[i * self.node_count + j][0]], self.node_coords[self.edge[i * self.node_count + j][1]])
@@ -44,7 +44,7 @@ class Environment:
 
         pheromone_matrix = np.array([
             [
-                self.ant_population / min(val for val in distance_matrix[j] if val != 0)
+                self.ant_population / min(val for val in 1/distance_matrix[j] if val != 0)
                 for i in range(self.node_count)
             ]
             for j in range(self.node_count)
@@ -54,6 +54,8 @@ class Environment:
 
         self.distance_matrix = distance_matrix
         self.pheromone_matrix = pheromone_matrix
+
+        # print("=> pheromone_matrix: ", self.pheromone_matrix)
 
         return pheromone_matrix
 
@@ -65,6 +67,10 @@ class Environment:
 
         # positive feedback
         self.pheromone_matrix = self.pheromone_matrix + sum_pheromone
+
+        # print("=> updated pheromone_matrix: ", self.pheromone_matrix[:10,])
+
+        # return self.pheromone_matrix
 
     # Get the pheromone trails in the environment
     def get_pheromone_matrix(self):

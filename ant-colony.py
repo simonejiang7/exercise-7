@@ -89,7 +89,7 @@ class AntColony:
                 # i += 1
                 # print("i: ", i)
 
-            # self.environment.update_pheromone_matrix(self.sum_pheromone)
+            self.environment.update_pheromone_matrix(self.sum_pheromone)
 
             iter += 1
 
@@ -98,7 +98,7 @@ class AntColony:
 
 def main():
     # Intialize the ant colony
-    ant_colony = AntColony(ant_population = 5, iterations = 10, alpha = 2, beta = 5, rho = 0.5)
+    ant_colony = AntColony(ant_population = 30, iterations = 10 , alpha = 3, beta = 5, rho = 0.2)
 
     # Solve the ant colony optimization problem
     solution, distance = ant_colony.solve()
