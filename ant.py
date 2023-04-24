@@ -12,7 +12,7 @@ class Ant():
         self.beta = beta
         self.current_location = initial_location
         self.visited_locations = [initial_location]
-        self.travelled_distance = 0
+        self.travelled_distance = [0]
 
     def get_distance(self, location1, location2):
         coord1 = self.environment.get_location_coords(location1+1)
@@ -31,6 +31,8 @@ class Ant():
             print("=> ant visited locations: ", self.visited_locations)
             assert len(self.visited_locations) == self.environment.get_num_locations()
             print("=> ant travelled distance: ", self.travelled_distance)
+            print(len(self.travelled_distance))
+            assert len(self.travelled_distance) == self.environment.get_num_locations()
             print("=> ant current location: ", self.current_location)
             print("=> finished iteration")
     
@@ -66,7 +68,7 @@ class Ant():
         print("=> current location is: ", self.current_location)
         print("=> future location is: ", future_location)
               
-        self.travelled_distance += self.get_distance(self.current_location, self.possible_locations[max_prob_index])
+        self.travelled_distance.append(self.get_distance(self.current_location, self.possible_locations[max_prob_index]))
         print("=> ant travelled distance: ", self.get_distance(self.current_location, self.possible_locations[max_prob_index]))
         print("=> ant travelled distance: ", self.environment.distance_matrix[self.current_location][self.possible_locations[max_prob_index]])
         assert self.get_distance(self.current_location, self.possible_locations[max_prob_index]) == self.environment.distance_matrix[self.current_location][self.possible_locations[max_prob_index]]
@@ -81,4 +83,10 @@ class Ant():
         self.environment = environment
 
     def get_visited_locations(self):
+        return self.visited_locations
+    
+    def get_travelled_distance(self):
+        return self.travelled_distance, sum(self.travelled_distance)
+    
+    def get_visited_location(self):
         return self.visited_locations
