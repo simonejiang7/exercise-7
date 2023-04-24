@@ -19,7 +19,7 @@ class Environment:
 
         # Intialize the pheromone map in the environment
         print("=> initialize the pheromone map in the environment")
-        print(problem.as_name_dict())
+        # print(problem.as_name_dict())
 
         self.problem = problem
         self.node = list(problem.get_nodes())
@@ -29,20 +29,8 @@ class Environment:
         self.edge_count = len(list(problem.get_edges()))
         self.possible_locations = list(range(self.node_count))
 
-        print("=> possible locations: ", self.possible_locations)
-        print("=> node coords: ", self.node_coords)
-
     # Intialize the pheromone trails in the environment
     def initialize_pheromone_map(self):
-
-        # distance_matrix = np.array([
-        #     [
-        #         self.problem.get_weight(*self.edge[i * self.node_count + j])
-        #         for j in range(self.node_count)
-        #     ]
-        #     for i in range(self.node_count)
-        # ])
-        # print("1 =>>>>>>>> \n", distance_matrix)
 
         distance_matrix = np.array([
             [
@@ -55,7 +43,6 @@ class Environment:
         pheromone_matrix = np.array([
             [
                 self.ant_population / min(val for val in distance_matrix[j] if val != 0)
-                # min(val for val in distance_matrix[j] if val != 0)
                 for i in range(self.node_count)
             ]
             for j in range(self.node_count)
@@ -66,7 +53,7 @@ class Environment:
         self.distance_matrix = distance_matrix
         self.pheromone_matrix = pheromone_matrix
 
-        return distance_matrix, pheromone_matrix
+        return pheromone_matrix
 
     # Update the pheromone trails in the environment
     def update_pheromone_matrix(self, sum_pheromone):
@@ -86,7 +73,7 @@ class Environment:
         return self.possible_locations
     
     def get_location_coords(self, location):
-        return self.node_coords[location]
+        return self.node_coords[location+1] # location range: 1-48
     
     def get_num_locations(self):
         return self.node_count
