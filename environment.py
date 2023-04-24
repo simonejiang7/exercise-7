@@ -59,7 +59,7 @@ class Environment:
     def update_pheromone_matrix(self, sum_pheromone):
 
         # negative feedback
-        self.distance_matrix = self.distance_matrix * self.rho
+        self.pheromone_matrix = self.pheromone_matrix * self.rho
 
         # positive feedback
         self.pheromone_matrix = self.pheromone_matrix + sum_pheromone

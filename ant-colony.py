@@ -44,7 +44,7 @@ class AntColony:
 
             for i in range(self.ant_population):
 
-                print("ant population: ", self.ant_population)
+                # print("ant population: ", self.ant_population)
 
                 # Initialize the random location
                 print("=> ant: ", i+1)
@@ -56,7 +56,7 @@ class AntColony:
                     # Position the ant in the environment of the ant colony so that it can move around
                 ant = Ant(self.alpha, self.beta, initial_location)
                 ant.join(self.environment)
-                print("debug", self.environment.possible_locations)
+                # print("debug", self.environment.possible_locations)
                 # else:
                 #     ant = self.ants[i]
                 
@@ -64,6 +64,10 @@ class AntColony:
 
                 ant_travel_distance, sum_distance = ant.get_travelled_distance()
                 ant_visited_locations = ant.get_visited_location()
+
+                print("=> ant travel distance: ", ant_travel_distance)
+                print("=> ant sum distance: ", sum_distance)
+                print("=> ant visited locations: ", ant_visited_locations)
 
                 print("=> ant final location: ", ant_visited_locations[-1])
 
@@ -76,15 +80,16 @@ class AntColony:
                     next_location = ant_visited_locations[i+1]
                     self.sum_pheromone[location][next_location] += 1 / ant_travel_distance[i+1]
 
-                # print("=> sum_pheromone: ", self.sum_pheromone)
+                # print("=> sum_pheromone: ", self.sum_pheromone[:10,])
+
                 
                 # Add the ant to the ant colony
                 self.ants.append(ant)
 
-                i += 1
-                print(i)
+                # i += 1
+                # print("i: ", i)
 
-            self.environment.update_pheromone_matrix(self.sum_pheromone)
+            # self.environment.update_pheromone_matrix(self.sum_pheromone)
 
             iter += 1
 
@@ -93,7 +98,7 @@ class AntColony:
 
 def main():
     # Intialize the ant colony
-    ant_colony = AntColony(ant_population = 5, iterations = 2, alpha = 1, beta = 2, rho = 0.2)
+    ant_colony = AntColony(ant_population = 5, iterations = 10, alpha = 3, beta = 100, rho = 0.8)
 
     # Solve the ant colony optimization problem
     solution, distance = ant_colony.solve()

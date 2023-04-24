@@ -13,6 +13,7 @@ class Ant():
         self.current_location = initial_location
         self.visited_locations = [initial_location]
         self.travelled_distance = [0]
+        self.first = True
 
     def get_distance(self, location1, location2):
         coord1 = self.environment.get_location_coords(location1)
@@ -21,8 +22,12 @@ class Ant():
 
     # The ant runs to visit all the possible locations of the environment 
     def run(self):
-        self.possible_locations = self.environment.get_possible_locations()
-        print("=> possible_locations: ", self.possible_locations)
+        
+        if self.first:
+            self.possible_locations = self.environment.get_possible_locations().copy()
+        self.first = False
+        # self.possible_locations = (all_possible_locations).copy()
+        # print("=> possible_locations: ", self.possible_locations)
         del self.possible_locations[self.possible_locations.index(self.current_location)]
 
         if self.possible_locations:
@@ -34,8 +39,9 @@ class Ant():
             assert len(self.visited_locations) == self.environment.get_num_locations()
             assert len(self.travelled_distance) == self.environment.get_num_locations()
 
-            print("=> ant visited locations: ", self.visited_locations)
-            print("=> ant travelled distance: ", self.travelled_distance)
+            # print("=> ant visited locations: ", self.visited_locations)
+            # print("=> ant travelled distance: ", self.travelled_distance)
+            # print("=> ant total distance: ", sum(self.travelled_distance))
            
             # self.possible_locations = self.environment.get_possible_locations()
             # self.current_location = self.visited_locations[-1]
@@ -61,6 +67,8 @@ class Ant():
 
               
         self.travelled_distance.append(self.get_distance(self.current_location, future_location))
+        # print(self.current_location)
+        # print(future_location)
         assert self.get_distance(self.current_location, future_location) == self.environment.distance_matrix[self.current_location][future_location]
         self.current_location = future_location
         self.visited_locations.append(self.current_location)
