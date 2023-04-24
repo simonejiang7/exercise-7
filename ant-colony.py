@@ -20,7 +20,8 @@ class AntColony:
         self.rho = rho 
 
         # Initialize the environment of the ant colony
-        self.environment = Environment(self.rho)
+        self.environment = Environment(self.rho, self.ant_population)
+        self.environment.initialize_pheromone_map()
 
         # Initilize the list of ants of the ant colony
         self.ants = []
