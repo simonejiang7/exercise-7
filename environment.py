@@ -13,13 +13,11 @@ class Environment:
         self.ant_population = ant_population
         
         # Initialize the environment topology
-
         with open('att48-specs/att48.tsp') as f:
             problem = tsplib95.read(f)
 
         # Intialize the pheromone map in the environment
         print("=> initialize the pheromone map in the environment")
-        # print(problem.as_name_dict())
 
         self.problem = problem
         self.node = list(problem.get_nodes())
@@ -34,6 +32,7 @@ class Environment:
 
         distance_matrix = np.array([
             [
+                # 1/d_ij = 1/ (distance between node i and node j)
                 1 / tsplib95.distances.euclidean(self.node_coords[self.edge[i * self.node_count + j][0]], self.node_coords[self.edge[i * self.node_count + j][1]])
                 if tsplib95.distances.euclidean(self.node_coords[self.edge[i * self.node_count + j][0]], self.node_coords[self.edge[i * self.node_count + j][1]]) != 0 else 0
                 for j in range(self.node_count)
@@ -42,20 +41,26 @@ class Environment:
         ])
 
 
-        pheromone_matrix = np.array([
-            [
-                self.ant_population / min(val for val in 1/distance_matrix[j] if val != 0)
-                for i in range(self.node_count)
-            ]
-            for j in range(self.node_count)
-        ])
+        # pheromone_matrix = np.array([
+        #     [
+        #         self.ant_population / min(val for val in 1/distance_matrix[j] if val != 0)
+        #         for i in range(self.node_count)
+        #     ]
+        #     for j in range(self.node_count)
+        # ])
+
+        # assign random values
+        lower_bound = 0.001
+        upper_bound = 0.01
+        shape = (self.node_count, self.node_count)
+        pheromone_matrix = np.random.uniform(lower_bound, upper_bound, shape)
+        # make it symmetric
+        pheromone_matrix = np.tril(pheromone_matrix) + np.triu(pheromone_matrix.T, 1)
 
         np.fill_diagonal(pheromone_matrix, 0)
 
         self.distance_matrix = distance_matrix
         self.pheromone_matrix = pheromone_matrix
-
-        # print("=> pheromone_matrix: ", self.pheromone_matrix)
 
         return pheromone_matrix
 
@@ -68,10 +73,6 @@ class Environment:
         # positive feedback
         self.pheromone_matrix = self.pheromone_matrix + sum_pheromone
 
-        # print("=> updated pheromone_matrix: ", self.pheromone_matrix[:10,])
-
-        # return self.pheromone_matrix
-
     # Get the pheromone trails in the environment
     def get_pheromone_matrix(self):
         return self.pheromone_matrix
@@ -81,7 +82,7 @@ class Environment:
         return self.possible_locations
     
     def get_location_coords(self, location):
-        return self.node_coords[location+1] # location range: 1-48
+        return self.node_coords[location+1] # location range after +1: 1-48
     
     def get_num_locations(self):
         return self.node_count
